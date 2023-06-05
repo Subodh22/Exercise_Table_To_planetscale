@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model WorkoutCeleb {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  ratings  String
+  routines Routine[]
+}
+
+model Routine {
+  id             Int          @id @default(autoincrement())
+  workoutCelebId Int
+  weekRoutine    String
+  order          Int
+  exercises      Exercise[]
+  workoutCeleb   WorkoutCeleb @relation(fields: [workoutCelebId], references: [id])
+}
+
+model Exercise {
+  id        Int     @id @default(autoincrement())
+  name      String
+  type      String
+  setType   String?
+  order     Int
+  routineId Int
+  routine   Routine @relation(fields: [routineId], references: [id])
+
+  sets      Set[]
+   }
+
+model Set {
+  id         Int      @id @default(autoincrement())
+  name       String
+  type       String
+  volume     String
+  weight     String
+  restTime   String
+  exerciseId Int
+  order      Int
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+}
